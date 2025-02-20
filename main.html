@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSbcFM3B7XTsA_RHB0c4NwnyJJ6qjVvcsLynw&s" type="image/x-icon">
+    <title>I Love U</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #ffb6c1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            overflow: hidden;
+        }
+        
+        .container {
+            text-align: center;
+            background-color: rgba(255, 255, 255, 0.9);
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            max-width: 500px;
+            width: 90%;
+        }
+        
+        .cat-image {
+            width: 200px;
+            margin-bottom: 20px;
+        }
+        
+        h1 {
+            font-size: 28px;
+            color: #ff4d6d;
+            margin-bottom: 30px;
+        }
+        
+        .buttons {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+        }
+        
+        .btn {
+            padding: 10px 30px;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            font-size: 18px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+        
+        .yes-btn {
+            background-color: #4CAF50;
+            color: white;
+        }
+        
+        .no-btn {
+            background-color: #f44336;
+            color: white;
+        }
+        
+        .celebration {
+            display: none;
+            font-size: 24px;
+            color: #ff4d6d;
+            margin-top: 30px;
+            animation: bounce 1s infinite;
+        }
+        
+        .heart {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background-color: #ff4d6d;
+            display: inline-block;
+            transform: rotate(-45deg);
+            opacity: 0;
+        }
+        
+        .heart:before, .heart:after {
+            content: '';
+            width: 20px;
+            height: 20px;
+            background-color: #ff4d6d;
+            border-radius: 50%;
+            position: absolute;
+        }
+        
+        .heart:before {
+            top: -10px;
+            left: 0;
+        }
+        
+        .heart:after {
+            top: 0;
+            left: 10px;
+        }
+        
+        @keyframes float {
+            0% {
+                transform: translateY(0) rotate(-45deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100px) rotate(-45deg);
+                opacity: 0;
+            }
+        }
+        
+        @keyframes bounce {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <img src="https://media.tenor.com/JUf3pDblts0AAAAM/just-waitin-waitin.gif" alt="Cute Cat" class="cat-image" onerror="this.src='/api/placeholder/200/200'">
+        <h1>你还爱我吗? :3</h1>
+        <div class="buttons">
+            <button class="btn yes-btn" id="yesBtn">YES</button>
+            <button class="btn no-btn" id="noBtn">NO</button>
+        </div>
+        <div class="celebration" id="celebration">
+            就知道你还爱我 ~ ❤️
+        </div>
+    </div>
+
+    <script>
+        const yesBtn = document.getElementById('yesBtn');
+        const noBtn = document.getElementById('noBtn');
+        const celebration = document.getElementById('celebration');
+        const container = document.querySelector('.container');
+        
+        let yesBtnSize = 1;
+        
+        noBtn.addEventListener('mouseover', function() {
+            // Random position within the viewport
+            const x = Math.random() * (window.innerWidth - 100);
+            const y = Math.random() * (window.innerHeight - 50);
+            
+            noBtn.style.position = 'absolute';
+            noBtn.style.left = `${x}px`;
+            noBtn.style.top = `${y}px`;
+        });
+        
+        noBtn.addEventListener('click', function() {
+            // Increase yes button size
+            yesBtnSize += 0.2;
+            yesBtn.style.transform = `scale(${yesBtnSize})`;
+            
+            // Random position for no button
+            const x = Math.random() * (window.innerWidth - 100);
+            const y = Math.random() * (window.innerHeight - 50);
+            
+            noBtn.style.position = 'absolute';
+            noBtn.style.left = `${x}px`;
+            noBtn.style.top = `${y}px`;
+        });
+        
+        yesBtn.addEventListener('click', function() {
+            // Show celebration
+            celebration.style.display = 'block';
+            
+            // Hide buttons
+            yesBtn.style.display = 'none';
+            noBtn.style.display = 'none';
+            
+            // Create hearts animation
+            createHearts();
+        });
+        
+        function createHearts() {
+            const heartCount = 20;
+            
+            for (let i = 0; i < heartCount; i++) {
+                setTimeout(() => {
+                    const heart = document.createElement('div');
+                    heart.classList.add('heart');
+                    
+                    // Position hearts around the container
+                    const containerRect = container.getBoundingClientRect();
+                    const x = containerRect.left + Math.random() * containerRect.width;
+                    const y = containerRect.bottom - 20;
+                    
+                    heart.style.left = `${x}px`;
+                    heart.style.top = `${y}px`;
+                    
+                    // Animation settings
+                    heart.style.animation = `float ${2 + Math.random() * 3}s linear forwards`;
+                    
+                    document.body.appendChild(heart);
+                    
+                    // Remove heart after animation
+                    setTimeout(() => {
+                        heart.remove();
+                    }, 5000);
+                }, i * 300);
+            }
+            
+            // Create more hearts every few seconds
+            setTimeout(createHearts, 5000);
+        }
+    </script>
+</body>
+</html>
